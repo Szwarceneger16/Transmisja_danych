@@ -10,11 +10,15 @@
 *.slo
 *.lo
 *.o
+*.doc
+*.docx
 *.obj
 
 # Precompiled Headers
 *.gch
 *.pch
+funkcja_rysuj.cpp
+funkcja_rysuj.h
 
 # Compiled Dynamic libraries
 *.so

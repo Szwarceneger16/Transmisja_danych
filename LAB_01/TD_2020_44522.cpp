@@ -7,88 +7,10 @@
 #include <cstdio>
 #include <locale>
 #include <vector>
-
-#define _PIXEL_SIZE_X "3840"
-#define _PIXEL_SIZE_Y "2160"
-
-typedef double(*funkcja_t)(double const &);
+#include "Source.h"
 
 using namespace std;
 
-//void print(std::string pathname, std::string out, std::vector<std::string> files, std::vector<std::string> plot_arguments, std::string title,double xctis,double yctis)
-//{
-//	if (files.size() == 0) return;
-//	std::string name_out;
-//	
-//	std::string xx = to_string(xctis);
-//	xx[xx.find(',')] = '.';
-//	std::string yy = to_string(xctis);
-//	yy[yy.find(',')] = '.';
-//	name_out = "gnuplot -p -e \"cd '" + pathname + "'; set xlabel 'Os X'; set ylabel 'Os Y'; set terminal png font arial 11 size "+ _PIXEL_SIZE_X +","+ _PIXEL_SIZE_Y+"; set xtics " + xx
-//		+ (std::string)"; set ytics " + yy + "; set title '" + title + "'; show title; set output '" + out + ".png'; plot '" + files[0] + "' with points " + plot_arguments[0];
-//	//cout << name_out;
-//	
-//	for (int i = 1; i < files.size(); i++)
-//	{
-//		name_out += ",'" + files[i] + "' with points " + plot_arguments[i];
-//	}
-//
-//	name_out += ";\"";
-//	system(name_out.c_str());
-//}
-
-void print(std::string pathname, std::string out, std::vector<std::string> files, std::vector<std::string> plot_arguments, std::string title)
-{
-	if (files.size() == 0) return;
-	std::string name_out;
-
-	name_out = "gnuplot -p -e \"cd '" + pathname + "';set xlabel 'Os X'; set ylabel 'Os Y'; set terminal png font arial 11 size " + _PIXEL_SIZE_X + "," + _PIXEL_SIZE_Y + ";"
-		+(std::string)" set title '" + title + "'; show title; set output '" + out + ".png'; plot '" + files[0] + "' with points " + plot_arguments[0];
-	//cout << name_out;
-
-	for (int i = 1; i < files.size(); i++)
-	{
-		name_out += ",'" + files[i] + "' with points " + plot_arguments[i];
-	}
-
-	name_out += ";\"";
-	system(name_out.c_str());
-}
-
-//void print(std::string pathname,std::string out, std::vector<std::string> files, std::vector<std::string> plot_arguments, std::string title, double xctis, double yctis, std::string options)
-//{
-//	if (files.size() == 0) return;
-//	std::string xx = to_string(xctis);
-//	xx[xx.find(',')] = '.';
-//	std::string yy = to_string(xctis);
-//	yy[yy.find(',')] = '.';
-//	std::string name_out = "gnuplot -p -e \"cd '" + pathname + "';set xlabel 'Os X'; set ylabel 'Os Y'; set terminal png font arial 11 size " + _PIXEL_SIZE_X + "," + _PIXEL_SIZE_Y + "; set xtics " + xx
-//		+ (std::string)"; set ytics " + yy + "; set title '" + title + "'; show title; " + options + " set output '" + out + ".png'; plot '" + files[0] + "' with points " + plot_arguments[0];
-//	//cout << name_out;
-//	for (int i = 1; i < files.size(); i++)
-//	{
-//		name_out += ",'" + files[i] + "' with points " + plot_arguments[i];
-//	}
-//
-//	name_out += ";\"";
-//	system(name_out.c_str());
-//}
-
-void print(std::string pathname, std::string out, std::vector<std::string> files, std::vector<std::string> plot_arguments, std::string title, std::string options)
-{
-	if (files.size() == 0) return;
-
-	std::string name_out = "gnuplot -p -e \"cd '" + pathname + "';set xlabel 'Os X'; set ylabel 'Os Y'; set terminal png font arial 11 " + _PIXEL_SIZE_X + "," + _PIXEL_SIZE_Y + "; "
-		+ (std::string)"set title '" + title + "'; show title; " + options + " set output '" + out + ".png'; plot '" + files[0] + "' with points " + plot_arguments[0];
-	//cout << name_out;
-	for (int i = 1; i < files.size(); i++)
-	{
-		name_out += ",'" + files[i] + "' with points " + plot_arguments[i];
-	}
-
-	name_out += ";\"";
-	system(name_out.c_str());
-}
 
 std::pair<double,double> wyroznik_trojmianu_wykres(double a, double b, double c,double const start, double const koniec, double dok)
 {
@@ -169,13 +91,14 @@ double fun_v(double const& t)
 		return (pow(t, -0.662) + 0.77 * sin(8 * t));
 }
 
+double N;
+
 double fun_p(double const& t)
 {
 	double sum = 0;
-	double N[] = { 2.0,4.0,22.0 };
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < N; i++)
 	{
-		sum += ((cos(12 * t * pow(N[i], 2)) + cos(16 * t * N[i])) / (pow(N[i], 2)));
+		sum += ((cos(12 * t * pow(N, 2)) + cos(16 * t * N)) / (pow(N, 2)));
 	}
 	return sum;
 }
@@ -197,7 +120,7 @@ int fun_plot(funkcja_t fun, std::string out, std::string funkcja,double t, doubl
 	std::vector<std::string> plot_option{ "pointtype 6 pointsize 0.25 lc rgb 'red' title 'funkcja " + funkcja + "'" };
 
 	cout << fun(koniec) << " " << fun(start);
-	print("C:/Users/GSzwa/source/repos/TD_2020_44522/wykresy",out, files, plot_option, out);
+	print("C:/Users/GSzwa/source/repos/TD_2020_44522/LAB_01/wykresy",out, files, plot_option, out);
 
 	return fun(t);
 }
@@ -212,6 +135,7 @@ int main()
 	
 	/*cout.setf(ios::fixed);
 	cout << wynik.first << " " << wynik.second ;*/
+	N = 6;
 
-	fun_plot(fun_y,"wykres_y","funkcja y",1, 0, 1, (1.0 / 22050));
+	fun_plot(fun_p,"wykres_p proba","funkcja pproba",1, 0, 1, (1.0 / 22050));
 }
