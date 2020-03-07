@@ -2,6 +2,13 @@
 # Created by https://www.gitignore.io/api/c++,visualstudio
 # Edit at https://www.gitignore.io/?templates=c++,visualstudio
 
+#MY FILES
+my_plot.cpp
+my_plot.h
+*.doc
+*.docx
+
+
 ### C++ ###
 # Prerequisites
 *.d
@@ -10,15 +17,11 @@
 *.slo
 *.lo
 *.o
-*.doc
-*.docx
 *.obj
 
 # Precompiled Headers
 *.gch
 *.pch
-funkcja_rysuj.cpp
-funkcja_rysuj.h
 
 # Compiled Dynamic libraries
 *.so

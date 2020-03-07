@@ -1,4 +1,5 @@
-ï»¿#define _USE_MATH_DEFINES
+
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include <math.h>
 #include <fstream>
@@ -7,16 +8,16 @@
 #include <cstdio>
 #include <locale>
 #include <vector>
-#include "Source.h"
+#include "my_plot.h"
 
 using namespace std;
 
 
-std::pair<double,double> wyroznik_trojmianu_wykres(double a, double b, double c,double const start, double const koniec, double dok)
+std::pair<double, double> wyroznik_trojmianu_wykres(double a, double b, double c, double const start, double const koniec, double dok)
 {
 	int delta = pow(b, 2) - (4 * (long long)a * c);
 
-	std::fstream delta_wykres,mz_wykres;
+	std::fstream delta_wykres, mz_wykres;
 	delta_wykres.open("wykresy\\function.dat", std::ios::out | std::ios::trunc);
 
 	long long l_dok = (koniec - start) / dok;
@@ -46,7 +47,7 @@ std::pair<double,double> wyroznik_trojmianu_wykres(double a, double b, double c,
 	}
 	else
 	{
-		wynik = std::pair<double, double>((sqrt(delta)-b)/(2*a), (-sqrt(delta) - b) / (2 * a));
+		wynik = std::pair<double, double>((sqrt(delta) - b) / (2 * a), (-sqrt(delta) - b) / (2 * a));
 		mz_wykres << wynik.first << " " << (pow(wynik.first, 2) * a + wynik.first * b + c) << std::endl;
 		mz_wykres << wynik.second << " " << (pow(wynik.second, 2) * a + wynik.second * b + c) << std::endl;
 		option = "set label 'dwa miejsca zerowe' at graph 0.5,0.5 center font 'Arial, 24'; ";;
@@ -54,10 +55,10 @@ std::pair<double,double> wyroznik_trojmianu_wykres(double a, double b, double c,
 	mz_wykres.close();
 
 	std::vector<std::string> files{ "function.dat", "points.dat" };
-	std::vector<std::string> plot_option{ "pointtype 6 pointsize 0.5 lc rgb 'red' title 'funkcja " + to_string((int)a)+"*x^2 + " + to_string((int)b) + "*x + " + to_string((int)c) +"'", "pointtype 3 pointsize 3 lc rgb 'black' title 'miejsca zerowe'" };
-	
+	std::vector<std::string> plot_option{ "pointtype 6 pointsize 0.5 lc rgb 'red' title 'funkcja " + to_string((int)a) + "*x^2 + " + to_string((int)b) + "*x + " + to_string((int)c) + "'", "pointtype 3 pointsize 3 lc rgb 'black' title 'miejsca zerowe'" };
 
-	print("C:/Users/GSzwa/source/repos/TD_2020_44522/wykresy","wyroznik trojmianu",files ,plot_option,"wyrÃ³znik trÃ³jmianu kwadratowego",option);
+
+	//print("C:/Users/GSzwa/source/repos/TD_2020_44522/wykresy","wyroznik trojmianu",files ,plot_option,"wyróznik trójmianu kwadratowego",option);
 	return wynik;
 }
 
@@ -66,19 +67,19 @@ double fun_x(double const& t)
 	return (pow(t, 2) * 2 + t * 2 + 4);
 }
 
-double fun_y (double const& t)
+double fun_y(double const& t)
 {
 	return (2 * pow(fun_x(t), 2) + 12 * cos(t));
 }
 
 double fun_z(double const& t)
 {
-	return (sin(2*M_PI*7*t)*fun_x(t)-0.2*log10(abs(fun_y(t))+M_PI));
+	return (sin(2 * M_PI * 7 * t) * fun_x(t) - 0.2 * log10(abs(fun_y(t)) + M_PI));
 }
 
 double fun_u(double const& t)
 {
-	return (sqrt(abs(fun_y(t)* fun_y(t)*fun_z(t)))-1.8*sin(0.4*t*fun_z(t)*fun_x(t)));
+	return (sqrt(abs(fun_y(t) * fun_y(t) * fun_z(t))) - 1.8 * sin(0.4 * t * fun_z(t) * fun_x(t)));
 }
 
 double fun_v(double const& t)
@@ -91,51 +92,29 @@ double fun_v(double const& t)
 		return (pow(t, -0.662) + 0.77 * sin(8 * t));
 }
 
-double N;
+int N;
 
-double fun_p(double const& t)
+double fun_p(double t)
 {
 	double sum = 0;
 	for (int i = 0; i < N; i++)
 	{
-		sum += ((cos(12 * t * pow(N, 2)) + cos(16 * t * N)) / (pow(N, 2)));
+		sum += ((cos(12 * t * pow(N, 2)) + cos(16 * t * N)) / ((pow(N, 2)) == 0.0 ? 1 : pow(N, 2)));
 	}
 	return sum;
 }
 
-int fun_plot(funkcja_t fun, std::string out, std::string funkcja,double t, double const start, double const koniec, double dok)
-{
-	std::fstream wykres;
-	wykres.open("wykresy\\function.dat", std::ios::out | std::ios::trunc);
-	long long l_dok = (koniec - start) / dok;
-	double actual = start;
-	for (int i = 0; i < l_dok; i++)
-	{
-		wykres << actual << " " << fun(actual) << std::endl;
-		actual += dok;
-	}
-	wykres.close();
-
-	std::vector<std::string> files{ "function.dat" };
-	std::vector<std::string> plot_option{ "pointtype 6 pointsize 0.25 lc rgb 'red' title 'funkcja " + funkcja + "'" };
-
-	cout << fun(koniec) << " " << fun(start);
-	print("C:/Users/GSzwa/source/repos/TD_2020_44522/LAB_01/wykresy",out, files, plot_option, out);
-
-	return fun(t);
-}
-
-
-int main()
+int main(int argc, char* argv[])
 {
 	_mkdir("wykresy");
 	setlocale(LC_ALL, "pl_PL");
-	
-	//std::pair< double, double > wynik = wyroznik_trojmianu_wykres(2, 2, 4,-10,10,0.01);
-	
-	/*cout.setf(ios::fixed);
-	cout << wynik.first << " " << wynik.second ;*/
-	N = 6;
 
-	fun_plot(fun_p,"wykres_p proba","funkcja pproba",1, 0, 1, (1.0 / 22050));
+	//std::pair< double, double > wynik = wyroznik_trojmianu_wykres(2, 2, 4,-10,10,0.01);
+
+	/*cout.setf(ios::fixed);*/
+	//cout << argv[0]  ;
+	N = 6;
+	my_plot wykres1(static_cast<std::string>(argv[0]), "wykres1p");
+	wykres1.fun_plot(fun_p, "funkcja pproba", 1, 0, 1, (1.0 / 22050));
+	wykres1.print();
 }
