@@ -3,8 +3,6 @@
 # Edit at https://www.gitignore.io/?templates=c++,visualstudio
 
 #MY FILES
-my_plot.cpp
-my_plot.h
 *.doc
 *.docx
 
@@ -26,7 +24,6 @@ my_plot.h
 # Compiled Dynamic libraries
 *.so
 *.dylib
-*.dll
 *.sln
 
 # Fortran module files
@@ -37,7 +34,6 @@ my_plot.h
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe

@@ -55,7 +55,8 @@ std::pair<double, double> wyroznik_trojmianu_wykres(double a, double b, double c
 	mz_wykres.close();
 
 	std::vector<std::string> files{ "function.dat", "points.dat" };
-	std::vector<std::string> plot_option{ "pointtype 6 pointsize 0.5 lc rgb 'red' title 'funkcja " + to_string((int)a) + "*x^2 + " + to_string((int)b) + "*x + " + to_string((int)c) + "'", "pointtype 3 pointsize 3 lc rgb 'black' title 'miejsca zerowe'" };
+	std::vector<std::string> plot_option{ "pointtype 6 pointsize 0.5 lc rgb 'red' title 'funkcja " + to_string((int)a) + "*x^2 + " + to_string((int)b) + "*x + " + to_string((int)c) + "'"
+		, "pointtype 3 pointsize 3 lc rgb 'black' title 'miejsca zerowe'" };
 
 
 	//print("C:/Users/GSzwa/source/repos/TD_2020_44522/wykresy","wyroznik trojmianu",files ,plot_option,"wyróznik trójmianu kwadratowego",option);
@@ -113,8 +114,8 @@ int main(int argc, char* argv[])
 
 	/*cout.setf(ios::fixed);*/
 	//cout << argv[0]  ;
-	N = 6;
-	my_plot wykres1(static_cast<std::string>(argv[0]), "wykres1p");
+	N = 15;
+	my_plot wykres1(static_cast<std::string>(argv[0]), "wykres55p");
 	wykres1.fun_plot(fun_p, "funkcja pproba", 1, 0, 1, (1.0 / 22050));
 	wykres1.print();
 }
