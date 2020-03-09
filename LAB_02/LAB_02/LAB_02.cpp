@@ -23,13 +23,17 @@ int main(int argc,char* argv[])
 	f = 6.0;
 	fi = 5.0*M_PI;
 
-	my_plot wykres1(static_cast<std::string>(argv[0]), "wykres");
+	/*std::string path(argv[0]);
+	path = path.substr(0, path.find_last_of('\\'));*/
+	std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\LAB_02\\LAB_02";
+
+	my_plot wykres1(path, "wykres");
 	
 	//std::cout << wykres1.debug() ;
 	std::string name = wykres1.function_plot(fun_1, ARG1, 0, 2, 0.001);
 	wykres1.print_plot();
 	
-	my_quant wykres2(static_cast<std::string>(argv[0]), "kwantyfikacja");
+	my_quant wykres2(path, "kwantyfikacja");
 	name = wykres2.quantize(2, pow(2, 16), ARG2 ,ARG3 , name);
 	wykres2.print_quant();
 
