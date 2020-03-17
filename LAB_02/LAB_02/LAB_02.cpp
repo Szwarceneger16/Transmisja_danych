@@ -27,14 +27,14 @@ int main(int argc,char* argv[])
 	path = path.substr(0, path.find_last_of('\\'));*/
 	std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\LAB_02\\LAB_02";
 
-	my_plot wykres1(path, "wykres");
+	my_plot wykres1(path, "wykres_zad3");
 	
 	//std::cout << wykres1.debug() ;
-	std::string name = wykres1.function_plot(fun_1, ARG1, 0, 2, 0.001);
+	std::string name = wykres1.function_plot(fun_1, ARG1, 0, 2, 0.002);
 	wykres1.print_plot();
 	
-	my_quant wykres2(path, "kwantyfikacja");
-	name = wykres2.quantize(2, pow(2, 16), ARG2 ,ARG3 , name);
+	my_quant wykres2(path, "kwantyfikacja_zad3");
+	name = wykres2.quantize(2, pow(2, 8), ARG2 ,ARG3 , name);
 	wykres2.print_quant();
 
 }
