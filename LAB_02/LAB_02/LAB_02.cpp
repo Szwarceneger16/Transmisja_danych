@@ -7,9 +7,9 @@
 #include "my_plot.h"
 #include "my_quant.h"
 
-#define ARG1 "pointtype 6 pointsize 0.25 lc rgb 'red' title 'wykres funkcji sin(x)' "
+#define ARG1 " with linespoints pointtype 6 pointsize 0.25 lc rgb 'red' title 'wykres funkcji sin(x)' "
 #define ARG2 " lc rgb 'red' title 'wykres zkwantyzowanej funkcji sin(x)' "
-#define ARG3 "pointtype 6 pointsize 0.3 lc rgb 'black' title 'probki zkwantyzowane' "
+#define ARG3 " with linespoints pointtype 6 pointsize 0.3 lc rgb 'black' title 'probki zkwantyzowane' "
 
 double A, f, fi;
 double fun_1(double t)
