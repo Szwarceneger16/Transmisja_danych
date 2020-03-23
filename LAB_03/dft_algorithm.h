@@ -58,5 +58,46 @@ namespace algo
 		return new_tab;
 	}
 
+
+	std::vector<double> load_from_file_to_table(std::string path)
+	{
+		std::fstream load_file;
+		std::vector<double> new_tab;
+
+		load_file.open(path, std::ios::in);
+		double actual1 = 0.0, actual2 = 0.0;
+
+		while (!load_file.eof())
+		{
+			load_file >> actual1 >> actual2;
+			new_tab.push_back(actual2);
+		}
+		load_file.close();
+
+		if (new_tab.size() == 0)
+		{
+			new_tab.resize(1);
+			return new_tab;
+		}
+		else
+			return new_tab;
+	}
+
+	std::string save_to_file_from_table(std::string path, std::vector<std::complex<double>> input_tab, double fs)
+	{
+		std::fstream save_file;
+		std::vector<std::complex<double>>::iterator it1 = input_tab.begin();
+		save_file.open(path, std::ios::out | std::ios::trunc);
+
+		int N = input_tab.size();
+		for (size_t k = 0; k < N; k++)
+		{
+			save_file << (((1 / fs) * k) / N) << " " << (10 * log10(sqrt(pow(it1->real(), 2) + pow(it1->imag(), 2)))) << std::endl;
+			it1++;
+		}
+
+		save_file.close();
+		return path;
+	}
 }
 

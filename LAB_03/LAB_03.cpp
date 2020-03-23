@@ -15,71 +15,74 @@
 
 double A = 1.0, f = 2.0, fi = 5.0 * M_PI;
 
-double fun_1(double t)
+double fun_1(double const t)
 {
 	return (A * sin((2 * M_PI * f * t) + fi));
 }
 
-std::vector<double> load_from_file_to_table(std::string path)
+double fun_x(double const t)
 {
-	std::fstream load_file;
-	std::vector<double> new_tab;
-	
-	load_file.open(path, std::ios::in);
-	double actual1 = 0.0,actual2 = 0.0;
+	return (pow(t, 2) * 2 + t * 2 + 4);
+}
 
-	while (!load_file.eof())
-	{
-		load_file >> actual1 >> actual2;
-		new_tab.push_back(actual2);
-	}
-	load_file.close();
-	
-	if (new_tab.size() == 0)
-	{
-		new_tab.resize(1);
-		return new_tab;
-	}
+double fun_y(double const t)
+{
+	return (2 * pow(fun_x(t), 2) + 12 * cos(t));
+}
+
+double fun_z(double const t)
+{
+	return (sin(2 * M_PI * 7 * t) * fun_x(t) - 0.2 * log10(abs(fun_y(t)) + M_PI));
+}
+
+double fun_u(double const t)
+{
+	return (sqrt(abs(fun_y(t) * fun_y(t) * fun_z(t))) - 1.8 * sin(0.4 * t * fun_z(t) * fun_x(t)));
+}
+
+double fun_v(double const t)
+{
+	if (t < 0.22)
+		return ((1 - 7 * t) * sin((2 * M_PI * t * 10) / (t + 0.04)));
+	else if (t < 0.7)
+		return (0.63 * t * sin(125 * t));
 	else
-		return new_tab;
+		return (pow(t, -0.662) + 0.77 * sin(8 * t));
 }
 
-std::string save_to_file_from_table(std::string path, std::vector<std::complex<double>> input_tab, double fs)
+int N = 22;
+
+double fun_p(double t)
 {
-	std::fstream save_file;
-	std::vector<std::complex<double>>::iterator it1 = input_tab.begin();
-	save_file.open(path, std::ios::out | std::ios::trunc);
-
-	int N = input_tab.size();
-	for (size_t k = 0; k < N; k++)
+	double sum = 0;
+	for (int i = 0; i < N; i++)
 	{
-		save_file << k << " " << (10*log10(sqrt( pow(it1->real(),2)+ pow(it1->imag(), 2)))) << std::endl;
-		it1++;
+		sum += ((cos(12 * t * pow(N, 2)) + cos(16 * t * N)) / ((pow(N, 2)) == 0.0 ? 1 : pow(N, 2)));
 	}
-
-	save_file.close();
-	return path;
+	return sum;
 }
+
+
 
 int main(int argc, char* argv[])
 {
-	std::string path(argv[0]);
-	path = path.substr(0, path.find_last_of('\\'));
-	//std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\LAB_02\\LAB_02";
+	const std::string file_name("zad2 funkcja 9 ");
+	/*std::string path(argv[0]);
+	path = path.substr(0, path.find_last_of('\\'));*/
+	std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\LAB_03";
 
-	my_plot wykres1(path, "wykres zad2");
-
+	my_plot wykres1(path, file_name+"wykres");
 
 	//std::cout << wykres1.debug() ;
-	std::string name = wykres1.function_plot(fun_1, ARG1, 0, 10, 0.01);
+	std::string name = wykres1.function_plot(fun_p, ARG1, 0,225, 0.1);
 	wykres1.print_plot();
 	
 	std::string path_wykres1 = wykres1.get_path();
 
-	std::vector<double> quant_table = load_from_file_to_table(path_wykres1);
+	std::vector<double> quant_table = algo::load_from_file_to_table(path_wykres1);
 	std::vector<std::complex<double>> dft_tab = algo::dft(quant_table);
-	name = save_to_file_from_table(path+"\\dft.dot", dft_tab,(1/0.01));
-	my_plot wykres3(path, "wykres zad2 2");
+	name = algo::save_to_file_from_table(path+"\\dft.dot", dft_tab,0.1);
+	my_plot wykres3(path, file_name + "widmo");
 	wykres3.read_file(name,ARG3);
 	wykres3.print_plot();
 }
