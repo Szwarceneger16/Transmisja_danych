@@ -30,23 +30,21 @@ namespace dft
 		int N = tab.size();
 		std::vector<double> new_tab;
 		new_tab.resize(N);
-		std::vector<double>::iterator it2 = new_tab.begin();
-		std::vector<std::complex<double>>::iterator it1 = tab.begin();
+		std::vector<double>::iterator it_real = new_tab.begin();
+		std::vector<std::complex<double>>::iterator it_complex = tab.begin();
+		std::complex<double> temp(0, 0);
 
 		for (int k = 0; k < N; k++)
 		{
 			for (int n = 0; n < N; n++)
 			{
-				*it1 += (tab[n] * exp((2 * M_PI * M_I * double(k) * double(n)) / double(N))) / double(N);
+				temp += *it_complex * std::polar(1.0, (n * k * (2 * M_PI) / double(N)));
+				it_complex++;
 			}
-			it1++;
-		}
-		it1 = tab.begin();
-		for (int k = 0; k < N; k++)
-		{
-			*it2 = abs(*it1);
-			it2++;
-			it1++;
+			*it_real = (1.0 / double(N)) * temp.real();
+			temp = (0, 0);
+			it_complex = tab.begin();
+			it_real++;
 		}
 
 		return new_tab;
@@ -134,7 +132,7 @@ namespace dft
 			return new_tab;
 	}
 
-	std::string save_file_spectrum(std::string path, std::vector<std::complex<double>> input_tab, double fs)
+	std::string save_file_spectrum(std::string path, std::vector<std::complex<double>> input_tab, double Ts)
 	{
 		std::fstream save_file;
 		std::vector<std::complex<double>>::iterator it1 = input_tab.begin();
@@ -143,7 +141,7 @@ namespace dft
 		int N = input_tab.size();
 		for (size_t k = 0; k < N; k++)
 		{
-			save_file << (((1 / fs) * k) / N) << " " << abs(*it1) << std::endl;
+			save_file << ((Ts * k) / N) << " " << abs(*it1) << std::endl;
 			it1++;
 		}
 
@@ -151,16 +149,18 @@ namespace dft
 		return path;
 	}
 
-	std::string save_file_real(std::string path, std::vector<double> input_tab, double fs)
+	std::string save_file_real(std::string path, std::vector<double> input_tab, double Ts)
 	{
 		std::fstream save_file;
 		std::vector<double>::iterator it1 = input_tab.begin();
 		save_file.open(path, std::ios::out | std::ios::trunc);
+		double x = 0.0;
 
 		int N = input_tab.size();
 		for (size_t k = 0; k < N; k++)
 		{
-			save_file << k << " " << *it1 << std::endl;
+			x += Ts;
+			save_file << x << " " << *it1 << std::endl;
 			it1++;
 		}
 
@@ -168,16 +168,18 @@ namespace dft
 		return path;
 	}
 
-	std::string save_file_complex(std::string path, std::vector<std::complex<double>> input_tab, double fs)
+	std::string save_file_complex(std::string path, std::vector<std::complex<double>> input_tab, double Ts)
 	{
 		std::fstream save_file;
 		std::vector<std::complex<double>>::iterator it1 = input_tab.begin();
 		save_file.open(path, std::ios::out | std::ios::trunc);
+		double x = 0.0;
 
 		int N = input_tab.size();
 		for (size_t k = 0; k < N; k++)
 		{
-			save_file << (((1 / fs) * k) / N) << " " << *it1 << std::endl;
+			x += Ts;
+			save_file << x << " " << *it1 << std::endl;
 			it1++;
 		}
 
