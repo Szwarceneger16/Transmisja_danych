@@ -67,7 +67,7 @@ double fun_p(double t)
 
 int main(int argc, char* argv[])
 {
-	const std::string file_name("zad2 funkcja 9");
+	const std::string file_name("zad2 funkcja ton_prosty");
 	/*std::string path(argv[0]);
 	path = path.substr(0, path.find_last_of('\\'));*/
 	std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\LAB_03";
@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
 	my_plot wykres1(path, file_name+" wykres");
 
 	//std::cout << wykres1.debug() ;
-	std::string name = wykres1.function_plot(fun_p, ARG1, 0,225, 0.1);
-	wykres1.print_plot();
+	std::string name = wykres1.function_plot(ton_prosty, ARG1, 0,225, 0.1);
+	//wykres1.print_plot();
 	
 	std::string path_wykres1 = wykres1.get_path();
 
@@ -84,9 +84,9 @@ int main(int argc, char* argv[])
 	std::vector<std::complex<double>> dft_tab = dft::dft(quant_table);
 	//name = dft::save_file_complex(path + "\\wykresy\\complex.dot", dft_tab, 0.1);
 	name = dft::save_file_spectrum(path+"\\wykresy\\spectrum.dot", dft_tab,0.1);
-	my_plot wykres3(path, file_name + " widmo");
-	wykres3.read_file(name,ARG3);
-	wykres3.print_plot("set logscale y 10; show logscale; ");
+	//my_plot wykres3(path, file_name + " widmo");
+	//wykres3.read_file(name,ARG3);
+	//wykres3.print_plot("set logscale y 10; show logscale; ");
 
 	
 	//std::vector<double> idft_tab = dft::idft(dft_tab);
