@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES
+﻿#define _USE_MATH_DEFINES
 #define _PIXEL_SIZE_X "7680"
 #define _PIXEL_SIZE_X "4320"
 #include <iostream>
@@ -9,10 +9,11 @@
 #include "my_quant.h"
 #include "dft_algorithm.h"
 
-#define ARG1 " pointtype 6 pointsize 0.25 lc rgb 'blue' title 'wykres funkcji sin(x)' "
-#define ARG2 " lc rgb 'red' title 'wykres zkwantyzowanej funkcji sin(x)' "
-#define ARG3 " pointtype 6 pointsize 0.3 lc rgb 'black' title 'probki zkwantyzowane' "
+#define ARG1 " with linespoints pointtype 6 pointsize 0.25 lc rgb 'blue' "
+#define ARG2 " with linespoints lc rgb 'red'  "
+#define ARG3 " with linespoints pointtype 6 pointsize 0.3 lc rgb 'black' "
 //#define ARG4 " using 1:(10 * $2); with linespoints pointtype 6 pointsize 0.3 lc rgb 'black' title 'probki zkwantyzowane' "
+#define ARG_log " using (log10(column(2))):1 axes x2y1 "
 
 namespace function
 {
@@ -39,6 +40,16 @@ namespace function
 
 }
 
+/*	ZMIERZONE SZEROKOSCI PASMA SYGNAŁU
+	
+	2 A modulacja ampitudy - 10Hz
+	2 A modulacja fazy - 10 Hz
+	2 B modulacja ampitudy - 20Hz
+	2 B modulacja fazy - 40 Hz
+	2 C modulacja ampitudy - 10 Hz
+	2 C modulacja fazy - 80 Hz
+*/
+
 
 int main()
 {
@@ -62,7 +73,8 @@ int main()
 	std::string name = dft::save_file_spectrum(path + "\\wykresy\\spectrum.dot", dft_tab, 0.005);
 	my_plot wykres2_A(path, file_name + " widmo modulacji amplitudy");
 	wykres2_A.read_file(name,ARG3);
-	wykres2_A.print_plot("set logscale y 10; show logscale; ");
+	//wykres2_A.read_file(wykres2_A.get_path(), ARG_log);
+	wykres2_A.print_plot();
 
 	//====================================================
 
@@ -77,6 +89,7 @@ int main()
 	std::string name2 = dft::save_file_spectrum(path + "\\wykresy\\spectrum.dot", dft_tab2, 0.005);
 	my_plot wykres3_A(path, file_name + " widmo modulacji fazy");
 	wykres3_A.read_file(name2, ARG3);
-	wykres3_A.print_plot("set logscale y 10; show logscale; ");
+	//wykres3_A.read_file(wykres3_A.get_path(), ARG_log);
+	wykres3_A.print_plot();
 }
 

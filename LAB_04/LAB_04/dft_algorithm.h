@@ -139,10 +139,12 @@ namespace dft
 		save_file.open(path, std::ios::out | std::ios::trunc);
 
 		int N = input_tab.size();
+		const double xx = 1.0/Ts;
 		for (size_t k = 0; k < N; k++)
 		{
-			save_file << ((Ts * k) / N) << " " << abs(*it1) << std::endl;
+			save_file << ((xx*k)/double(N)) << " " << 10* log10(abs(*it1)) << std::endl;
 			it1++;
+
 		}
 
 		save_file.close();
