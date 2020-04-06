@@ -20,8 +20,8 @@ namespace function
 	double A = 1.0;
 	double fm = 2.0;
 	double fn = 10 * fm;
-	double ka = 0.5;
-	double kp = 1.0;
+	double ka = 24;
+	double kp = 24;
 
 	double info_signal(double t)
 	{	
@@ -53,7 +53,7 @@ namespace function
 
 int main()
 {
-	const std::string file_name("zad2 A ");
+	const std::string file_name("zad2 C ");
 	std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\LAB_04";
 
 	/*my_plot wykres1(path, file_name + " wykres");

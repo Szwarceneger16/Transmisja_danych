@@ -2,6 +2,7 @@
 #include <complex>
 #include <time.h>
 #include <iomanip>
+#include <algorithm>
 
 namespace dft
 {
@@ -137,13 +138,20 @@ namespace dft
 		std::fstream save_file;
 		std::vector<std::complex<double>>::iterator it1 = input_tab.begin();
 		save_file.open(path, std::ios::out | std::ios::trunc);
-
+		std::vector<double> log_tab;
 		int N = input_tab.size();
+
+		for (int i = 0; i < N; i++)
+		{
+			log_tab.push_back(10 * log10(abs(*it1)));
+			it1++;
+		}
+
+		double log_max = *std::max_element(log_tab.begin(), log_tab.end());
 		const double xx = 1.0/Ts;
 		for (size_t k = 0; k < N; k++)
 		{
-			save_file << ((xx*k)/double(N)) << " " << 10* log10(abs(*it1)) << std::endl;
-			it1++;
+			save_file << ((xx*k)/double(N)) << " " << log_tab[k]-log_max << std::endl;
 
 		}
 
