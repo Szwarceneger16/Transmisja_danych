@@ -52,20 +52,6 @@ std::string S2BS(char in[], Endian sw = littleEndian)
 	str << std::endl;
 	wynik = str.str();
 
-	//std::cout << wynik << std::endl;
-	/*int stringSize = (wynik.size() / 10) + 1;
-	int* table = new int[stringSize]();
-	std::string temp = "";
-	for (int i = 0; i < stringSize; i+=11)
-	{
-		for (short j = i; j <= (i+10); j++)
-		{
-			temp.append(1,wynik[j]);
-		}
-		table[i] = stoi(temp);
-			temp.clear();
-	}*/
-
 	return wynik;
 };
 
@@ -102,13 +88,13 @@ namespace function {
 	}
 }
 
-double generuj(double t, int const data)
+double informacyjny(double t, int const data)
 {
 	return data == 0 ? 0 : 1;
 }
 
 /* ZMIERZONE SZEROKOSCI PASMA SYGNAŁU dla f sygnału = 25Hz
-	ZAD 4
+	ZAD 5
 	kluczowanie amplitudy = 2 Hz
 	kluczowanie czestotliowsci = 1Hz
 	kluczowanie fazy = 3Hz
@@ -130,19 +116,21 @@ int main()
 	char moja[10] = "abc";
 	//std::cout << moja << std::endl;
 	std::string ret = S2BS(moja);
-	ret = ret.substr(0, 11);
-	double Tb = 2.0/10; //zad3
-	//double Tb = 1.0; //zad2
+	//std::cout << ret << std::endl;
+	//ret = ret.substr(0, 11);
+	//double Tb = 2.0/10; //zad3
+	double Tb = 1.0; //zad2
 	double Ts = 0.005;
 	int N = ret.size() * (1 / Tb);
-	function::fm = (N) * pow(Tb,-1);
-	function::fm0 = (N + 1) / Tb;
-	function::fm1 = (N + 2) / Tb;
+	//function::fm = (N) * pow(Tb,-1);
+	function::fm0 = 1;
+	function::fm1 = 4;
 
 	my_plot wykres1(path, file_name + " sygnal infromacyjny");
-	std::string name = wykres1.function_plot(generuj,ARG1, ret,Ts,Tb);
-	wykres1.print_plot("set yrange [-2:3]; ");
-	path_wykres1 = wykres1.get_path();
+	std::string name = wykres1.function_plot(informacyjny,ARG1, ret,Ts,Tb);
+	//.print_plot("set yrange [-2:3]; ");
+	//path_wykres1 = wykres1.get_path();
+	std::cout << N << "  " << path_wykres1 << std::endl;
 
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
@@ -155,8 +143,9 @@ int main()
 
 	my_plot wykres2(path, file_name + " kluczowanie amplitudy");
 	name = wykres2.function_plot(function::za,ARG1, ret,Ts, Tb);
-	wykres2.print_plot("set yrange [-2:3]; ");
+	//wykres2.print_plot("set yrange [-2:3]; ");
 	path_wykres1 = wykres2.get_path();
+	std::cout << path_wykres1 << std::endl;
 	
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
@@ -167,12 +156,11 @@ int main()
 	wykres2_A.print_plot();
 #endif // __DFT
 
-	
-
 	my_plot wykres3(path, file_name + " kluczowanie czestotliowsci");
 	name = wykres3.function_plot(function::zf, ARG1, ret, Ts, Tb);
-	wykres3.print_plot("set yrange [-2:3]; ");
+	//wykres3.print_plot("set yrange [-2:3]; ");
 	path_wykres1 = wykres3.get_path();
+	std::cout << path_wykres1 << std::endl;
 
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
@@ -183,12 +171,11 @@ int main()
 	wykres3_A.print_plot();
 #endif // __DFT
 
-	
-
 	my_plot wykres4(path, file_name + " kluczowanie fazy");
 	name = wykres4.function_plot(function::zp, ARG1, ret, Ts, Tb);
-	wykres4.print_plot("set yrange [-2:3]; ");
+	//wykres4.print_plot("set yrange [-2:3]; ");
 	path_wykres1 = wykres4.get_path();
+	std::cout << path_wykres1 << std::endl;
 
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
