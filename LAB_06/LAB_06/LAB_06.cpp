@@ -175,7 +175,7 @@ std::string demodulate_fsk(std::vector<std::pair<double, double>> input1, std::v
 	}
 
 	std::string ppp1 = dft::save_file_real(path + "\\calka.dot", wyn, H);
-	my_plot wykres1(path, file_name + " demodulacji amplitudy calka ");
+	my_plot wykres1(path, file_name + " demodulacji czestotliowsci calka ");
 	wykres1.read_file(ppp1, ARG3);
 	wykres1.print_plot();
 
