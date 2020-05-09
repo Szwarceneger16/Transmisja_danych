@@ -55,7 +55,99 @@ std::string S2BS(char in[], Endian sw = littleEndian)
 	return wynik;
 };
 
-namespace fun
+namespace demodualtor
+{
+	std::string TTL(std::vector<std::pair<double, double>> const &input, double Tb = 1.0)
+	{
+		double Ts = input.at(1).first - input.at(0).first;
+		std::string wynik;
+		std::vector<std::pair<double, double>>::const_iterator it = input.begin();
+
+		while((std::distance(it, input.end()) >= floor(Tb / Ts)))
+		{
+			if (it->second < 0.5) wynik.append("0");
+			else wynik.append("1");
+
+			std::advance(it, floor(Tb / Ts));
+		}
+
+		return wynik;
+	}
+
+	std::string Manchester(std::vector<std::pair<double, double>> const& input, double Tb = 1.0)
+	{
+		double Ts = input.at(1).first - input.at(0).first;
+		std::string wynik;
+		std::vector<std::pair<double, double>>::const_iterator it = input.begin(),it2 = input.begin();
+		std::advance(it, floor((Tb / Ts) * 0.4));
+		std::advance(it2, floor((Tb / Ts) * 0.6));
+
+		while ((std::distance(it2, input.end()) >= floor(Tb / Ts)))
+		{
+			if (it->second < 0.0 && it2->second > 0.0) wynik.append("0");
+			else if (it->second > 0.0 && it2->second < 0.0) wynik.append("1");
+
+			std::advance(it, floor(Tb / Ts));
+			std::advance(it2, floor(Tb / Ts));
+		}
+		if (it->second < 0.0 && it2->second > 0.0) wynik.append("0");
+		else if (it->second > 0.0 && it2->second < 0.0) wynik.append("1");
+		return wynik;
+	}
+
+	std::string NRZI(std::vector<std::pair<double, double>> const& input, double Tb = 1.0)
+	{
+		double Ts = input.at(1).first - input.at(0).first;
+		std::string wynik;
+		std::vector<std::pair<double, double>>::const_iterator it = input.begin(), it2 = input.begin();
+		std::advance(it2, 10);
+		if ((it->second < 0.0 && it2->second > 0.0) || (it->second > 0.0 && it2->second < 0.0)) wynik.append("1");
+		else wynik.append("0");
+
+		std::advance(it, floor((Tb / Ts)*0.8));
+		std::advance(it2, floor(Tb / Ts));
+
+		while ((std::distance(it2, input.end()) >= floor(Tb / Ts)))
+		{
+			if ((it->second < 0.0 && it2->second > 0.0) || (it->second > 0.0 && it2->second < 0.0)) wynik.append("1");
+			else wynik.append("0");
+
+			std::advance(it, floor(Tb / Ts));
+			std::advance(it2, floor(Tb / Ts));
+		}
+		if ((it->second < 0.0 && it2->second > 0.0) || (it->second > 0.0 && it2->second < 0.0)) wynik.append("1");
+		else wynik.append("0");
+		return wynik;
+
+	}
+
+	std::string BAMI(std::vector<std::pair<double, double>> const& input, double Tb = 1.0)
+	{
+		double Ts = input.at(1).first - input.at(0).first;
+		std::string wynik;
+		std::vector<std::pair<double, double>>::const_iterator it = input.begin(), it2 = input.begin();
+		std::advance(it2, 10);
+		if ((it->second < 0.5 && it2->second > 0.5) || (it->second > -0.5 && it2->second < -0.5)) wynik.append("1");
+		else wynik.append("0");
+
+		std::advance(it, floor((Tb / Ts) * 0.8));
+		std::advance(it2, floor(Tb / Ts));
+
+		while ((std::distance(it2, input.end()) >= floor(Tb / Ts)))
+		{
+			if ((it->second < 0.5 && it2->second > 0.5) || (it->second > -0.5 && it2->second < -0.5)) wynik.append("1");
+			else wynik.append("0");
+
+			std::advance(it, floor(Tb / Ts));
+			std::advance(it2, floor(Tb / Ts));
+		}
+		if ((it->second < 0.5 && it2->second > 0.5) || (it->second > -0.5 && it2->second < -0.5)) wynik.append("1");
+		else wynik.append("0");
+		return wynik;
+	}
+}
+
+namespace modulators
 {
 	double zegar(double const& t, int const& data)
 	{
@@ -74,22 +166,22 @@ namespace fun
 		{
 			if (t < (Tb / 2.0))
 			{
-				return 1;
+				return -1;
 			}
 			else
 			{
-				return -1;
+				return 1;
 			}
 		}
 		else
 		{
 			if (t >= (Tb / 2.0))
 			{
-				return 1;
+				return -1;
 			}
 			else
 			{
-				return -1;
+				return 1;
 			}
 		}
 	}
@@ -135,33 +227,43 @@ int main()
 	char moja[10] = "abcd";
 	//std::cout << moja << std::endl;
 	std::string ret = S2BS(moja);
-	//std::cout << ret << std::endl;
 	ret = ret.substr(0, 16);
+	std::cout << ret << std::endl;
 	std::string zegar = "01010101010101010";
 	double Ts = 0.01;
+	std::string name;
+	std::vector<std::pair<double, double>> dem_tab;
 
-	my_plot wykres0(path, file_name + " sygnal S2BS");
-	std::string name = wykres0.function_plot(fun::zegar, ARG1, ret, Ts, fun::Tb);
-	wykres0.print_plot("set yrange [-0.5:1.5]; set xtics 0.5; ");
+	//my_plot wykres0(path, file_name + " sygnal S2BS");
+	//name = wykres0.function_plot(modulators::zegar, ARG1, ret, Ts, modulators::Tb);
+	//wykres0.print_plot("set yrange [-0.5:1.5]; set xtics 0.5; ");
 
-	my_plot wykres1(path, file_name + " sygnal zegarowy");
-	name = wykres1.function_plot(fun::zegar, ARG1, zegar, Ts, fun::Tb);
-	wykres1.print_plot("set yrange [-0.5:1.5]; set xtics 0.5; ");
+	//my_plot wykres1(path, file_name + " sygnal zegarowy");
+	//name = wykres1.function_plot(modulators::zegar, ARG1, zegar, Ts, modulators::Tb);
+	//wykres1.print_plot("set yrange [-0.5:1.5]; set xtics 0.5; ");
 
 	my_plot wykres2(path, file_name + " sygnal TTL");
-	name = wykres2.function_plot(fun::TTL, ARG1, ret, Ts, fun::Tb);
-	wykres2.print_plot("set yrange [-0.5:1.5]; set xtics 0.5; ");
+	name = wykres2.function_plot(modulators::TTL, ARG1, ret, Ts, modulators::Tb);
+	dem_tab = dft::load_file_real(name);
+	std::cout << demodualtor::TTL(dem_tab) << "    -- TTL" << std::endl;
+	//wykres2.print_plot("set yrange [-0.5:1.5]; set xtics 0.5; ");
 
 	my_plot wykres3(path, file_name + " sygnal Manchester");
-	name = wykres3.function_plot(fun::Manchester, ARG1, ret, Ts, fun::Tb);
-	wykres3.print_plot("set yrange [-1.5:1.5]; set xtics 0.5; ");
+	name = wykres3.function_plot(modulators::Manchester, ARG1, ret, Ts, modulators::Tb);
+	dem_tab = dft::load_file_real(name);
+	std::cout << demodualtor::Manchester(dem_tab) << "    -- Manchester" << std::endl;
+	//wykres3.print_plot("set yrange [-1.5:1.5]; set xtics 0.5; ");
 
 	my_plot wykres4(path, file_name + " sygnal NRZI");
-	name = wykres4.function_plot(fun::NRZI, ARG1, ret, Ts, fun::Tb);
-	wykres4.print_plot("set yrange [-1.5:1.5]; set xtics 0.5; ");
+	name = wykres4.function_plot(modulators::NRZI, ARG1, ret, Ts, modulators::Tb);
+	dem_tab = dft::load_file_real(name);
+	std::cout << demodualtor::NRZI(dem_tab) << "    -- NRZI" << std::endl;
+	//wykres4.print_plot("set yrange [-1.5:1.5]; set xtics 0.5; ");
 
 	my_plot wykres5(path, file_name + " sygnal BAMI");
-	name = wykres5.function_plot(fun::BAMI, ARG1, ret, Ts, fun::Tb);
-	wykres5.print_plot("set yrange [-1.5:1.5]; set xtics 0.5; ");
+	name = wykres5.function_plot(modulators::BAMI, ARG1, ret, Ts, modulators::Tb);
+	dem_tab = dft::load_file_real(name);
+	std::cout << demodualtor::BAMI(dem_tab) << "    -- BAMI" << std::endl;
+	//wykres5.print_plot("set yrange [-1.5:1.5]; set xtics 0.5; ");
 
 }
