@@ -100,8 +100,7 @@ public:
 	}
 	static std::string decode(std::string in)
 	{
-		matrix::print_matrix(G_matrix);
-		matrix::print_matrix(H_matrix);
+
 		if (in.size() % 8 != 0) return NULL;
 		std::string wynik;
 		int wyciete = 0;
@@ -113,7 +112,7 @@ public:
 			else
 				wyciete++;
 		}
-		if (wyciete > 0) std::cout << "uszkodoznych ramek bylo" << wyciete << std::endl;
+		if (wyciete > 0) std::cout << "uszkodoznych ramek bylo: " << wyciete << std::endl;
 		return wynik;
 	}
 	static std::string destroy(std::string in,int bit,int ramka = 0)
@@ -142,12 +141,15 @@ int main()
 	//matrix::print_matrix(wynik);
 	
 	std::string proba = "1001";
-	std::cout << proba << " | ";
+	std::cout << "dane: " << proba << std::endl;
 	auto zakodowany = Hamming74_SECDED::code(proba);
-	std::cout << zakodowany << " | ";
+	std::cout << "zakodowany: " << zakodowany << std::endl;
 	auto popsuty = Hamming74_SECDED::destroy(zakodowany, 5);
+	std::cout << "popsuty: " << popsuty << std::endl;
+	popsuty = Hamming74_SECDED::destroy(popsuty, 3);
+	std::cout << "popsuty ponownie: " << popsuty << std::endl;
 	auto zdekodowany = Hamming74_SECDED::decode(popsuty);
-	std::cout << zdekodowany << std::endl;
+	std::cout << "zdekodowany: " << zdekodowany << std::endl;
 
 }
 
