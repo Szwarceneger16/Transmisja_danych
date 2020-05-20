@@ -14,6 +14,38 @@
 #include "dft_algorithm.h"
 #include "my_plot.h"
 
+enum Endian
+{
+	littleEndian = 1,
+	bigEndian = 2
+};
+
+std::string S2BS(std::string in, Endian sw = littleEndian)
+{
+
+	int N = in.size();
+	std::string wynik;
+
+	if (sw == littleEndian)
+	{
+		for (int j = 0; j <= N; j++)
+		{
+			std::bitset<8> x(in[j]);
+			wynik += x.to_string();
+		}
+	}
+	else
+	{
+		for (int i = N; i >= 0; i++)
+		{
+			std::bitset<8> x(in[i]);
+			wynik += x.to_string();
+		}
+	}
+
+	return wynik;
+};
+
 static class Hamming74_SECDED {
 	static std::vector<std::vector<int>> const G_matrix;
 	static std::vector<std::vector<int>> const H_matrix;
@@ -35,17 +67,17 @@ static class Hamming74_SECDED {
 		{
 			parzystosc += it->at(0);
 		}
-		wyn += std::to_string(parzystosc % 2);
+		wyn.append(std::to_string(parzystosc % 2));
 		for (std::vector<std::vector<int>>::iterator it = coded_matrix.begin(); it != coded_matrix.end(); it++)
 		{
-			wyn += std::to_string(it->at(0));
+			wyn.append(std::to_string(it->at(0)));
 		}
 		return wyn;
 	}
 
 	static std::string _decode(bool d1, bool d2, bool d3, bool d4, bool d5, bool d6, bool d7, bool d8)
 	{
-		std::vector<std::vector<int>> const d_matrix = { {d8},{d7},{d6},{d5},{d4},{d3},{d2} };
+		std::vector<std::vector<int>> const d_matrix = { {d2},{d3},{d4},{d5},{d6},{d7},{d8} };
 		auto decoded_matrix = matrix::multiply(H_matrix, d_matrix);
 		std::transform(decoded_matrix.begin(), decoded_matrix.end(), decoded_matrix.begin(), mod2);
 		int parzystosc = (d1 + d2 + d3 + d4 + d5 + d6 + d7 + d8) % 2;
@@ -124,6 +156,7 @@ public:
 			in[((ramka + 1) * 8) - bit ] = '1';
 		return in;
 	}
+	friend int main(void);
 };
 
 std::vector<std::vector<int>> const Hamming74_SECDED::G_matrix = { {1,1,0,1},{1,0,1,1},{1,0,0,0},{0,1,1,1},{0,1,0,0},{0,0,1,0},{0,0,0,1} };
@@ -134,22 +167,22 @@ int main()
 	//auto proba = matrix::initialize(3, 5);
 	//std::vector<std::vector<int>> mac1 = { {1,1,0,1},{1,0,1,1},{1,0,0,0},{0,1,1,1},{0,1,0,0},{0,0,1,0},{0,0,0,1} };
 	//std::vector<std::vector<int>> mac2 = { {4},{6},{5},{3} };
-	//matrix::print_matrix(mac1);
+	//matrix::print_matrix(Hamming74_SECDED::G_matrix);
 	//std::cout<< std::endl;
-	//matrix::print_matrix(mac2);
+	//matrix::print_matrix(Hamming74_SECDED::H_matrix);
 	//auto wynik = matrix::multiply(mac1, mac2);
 	//matrix::print_matrix(wynik);
 	
-	std::string proba = "1001";
+	std::string proba = S2BS("NatanielGrzesiek");
 	std::cout << "dane: " << proba << std::endl;
 	auto zakodowany = Hamming74_SECDED::code(proba);
-	std::cout << "zakodowany: " << zakodowany << std::endl;
-	auto popsuty = Hamming74_SECDED::destroy(zakodowany, 5);
-	std::cout << "popsuty: " << popsuty << std::endl;
-	popsuty = Hamming74_SECDED::destroy(popsuty, 3);
-	std::cout << "popsuty ponownie: " << popsuty << std::endl;
-	auto zdekodowany = Hamming74_SECDED::decode(popsuty);
-	std::cout << "zdekodowany: " << zdekodowany << std::endl;
+	//std::cout << "zakodowany: " << zakodowany << std::endl;
+	//auto popsuty = Hamming74_SECDED::destroy(zakodowany, 5);
+	//std::cout << "popsuty: " << popsuty << std::endl;
+	//popsuty = Hamming74_SECDED::destroy(popsuty, 3);
+	//std::cout << "popsuty ponownie: " << popsuty << std::endl;
+	auto zdekodowany = Hamming74_SECDED::decode(zakodowany);
+	std::cout << "zdekodowany: " << zakodowany << std::endl;
 
 }
 

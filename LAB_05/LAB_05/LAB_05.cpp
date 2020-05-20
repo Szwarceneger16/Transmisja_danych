@@ -25,19 +25,18 @@ enum Endian
 };
 
 // STRUMIEN BINARNY = 011000010110001001100011
-std::string S2BS(char in[], Endian sw = littleEndian)
+std::string S2BS(std::string in, Endian sw = littleEndian)
 {
-	
-	int N = strlen(in) - 1;
-	std::ostringstream str;
+
+	int N = in.size();
 	std::string wynik;
 
 	if (sw == littleEndian)
 	{
-		for (int i = 0; i <= N; i++)
+		for (int j = 0; j <= N; j++)
 		{
-			std::bitset<8> x(in[i]);
-			str << x;
+			std::bitset<8> x(in[j]);
+			wynik += x.to_string();
 		}
 	}
 	else
@@ -45,12 +44,9 @@ std::string S2BS(char in[], Endian sw = littleEndian)
 		for (int i = N; i >= 0; i++)
 		{
 			std::bitset<8> x(in[i]);
-			str << x;
-		}	
+			wynik += x.to_string();
+		}
 	}
-
-	str << std::endl;
-	wynik = str.str();
 
 	return wynik;
 };
@@ -63,7 +59,7 @@ namespace function {
 	//-----------------------------------
 	double A0 = 1.0;
 	double A1 = 0.0;
-	double za(double t, int const data) // kluczowanie amplitudy
+	double za(double const& t, int const& data) // kluczowanie amplitudy
 	{
 		if (data == 0)
 			return (A1 * sin(2 * M_PI * fm * t + fi));
@@ -74,7 +70,7 @@ namespace function {
 	//-----------------------------------
 	double fm0 = 1.0;
 	double fm1 = 4.0;
-	double zf(double t, int const data)// kluczowanie czestotliowsci
+	double zf(double const& t, int const& data)// kluczowanie czestotliowsci
 	{
 		return data == 0 ? A0 * sin(2 * M_PI * fm0 * t + fi) : A0 * sin(2 * M_PI * fm1 * t + fi);
 	}
@@ -82,7 +78,7 @@ namespace function {
 	//-----------------------------------
 	double fi0 = 0;
 	double fi1 = M_PI;
-	double zp(double t, int const data) // kluczowanie fazy
+	double zp(double const& t, int const& data) // kluczowanie fazy
 	{
 		return data == 0 ? A0 * sin(2 * M_PI * fm * t + fi0) : A0 * sin(2 * M_PI * fm * t + fi1);
 	}
@@ -111,26 +107,26 @@ int main()
 
 	const std::string file_name("zad3 ");
 	const std::string file_name2("zad4 ");
-	std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\LAB_05";
+	std::string path = "C:\\Users\\GSzwa\\source\\repos\\TD_2020_44522\\NN";
 
-	char moja[10] = "abc";
+	std::string ret = "NatanielGrzesiek";
 	//std::cout << moja << std::endl;
-	std::string ret = S2BS(moja);
+	ret = S2BS(ret);
 	//std::cout << ret << std::endl;
 	//ret = ret.substr(0, 11);
 	//double Tb = 2.0/10; //zad3
 	double Tb = 1.0; //zad2
-	double Ts = 0.005;
+	double Ts = 0.01;
 	int N = ret.size() * (1 / Tb);
 	//function::fm = (N) * pow(Tb,-1);
 	function::fm0 = 1;
 	function::fm1 = 4;
 
-	my_plot wykres1(path, file_name + " sygnal infromacyjny");
-	std::string name = wykres1.function_plot(informacyjny,ARG1, ret,Ts,Tb);
-	//.print_plot("set yrange [-2:3]; ");
-	//path_wykres1 = wykres1.get_path();
-	std::cout << N << "  " << path_wykres1 << std::endl;
+	//my_plot wykres1(path, file_name + " sygnal infromacyjny");
+	//std::string name = wykres1.function_plot(informacyjny,ARG1, ret,Ts,Tb);
+	////.print_plot("set yrange [-2:3]; ");
+	////path_wykres1 = wykres1.get_path();
+	//std::cout << N << "  " << path_wykres1 << std::endl;
 
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
@@ -142,10 +138,10 @@ int main()
 #endif // DEBUG
 
 	my_plot wykres2(path, file_name + " kluczowanie amplitudy");
-	name = wykres2.function_plot(function::za,ARG1, ret,Ts, Tb);
-	//wykres2.print_plot("set yrange [-2:3]; ");
+	auto name = wykres2.function_plot(function::za,ARG1, ret,Ts, Tb);
+	wykres2.print_plot("set yrange [-2:3]; set xtics 1; ");
 	path_wykres1 = wykres2.get_path();
-	std::cout << path_wykres1 << std::endl;
+	//std::cout << path_wykres1 << std::endl;
 	
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
@@ -158,9 +154,9 @@ int main()
 
 	my_plot wykres3(path, file_name + " kluczowanie czestotliowsci");
 	name = wykres3.function_plot(function::zf, ARG1, ret, Ts, Tb);
-	//wykres3.print_plot("set yrange [-2:3]; ");
+	wykres3.print_plot("set yrange [-2:3]; set xtics 1; ");
 	path_wykres1 = wykres3.get_path();
-	std::cout << path_wykres1 << std::endl;
+	//std::cout << path_wykres1 << std::endl;
 
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
@@ -173,9 +169,9 @@ int main()
 
 	my_plot wykres4(path, file_name + " kluczowanie fazy");
 	name = wykres4.function_plot(function::zp, ARG1, ret, Ts, Tb);
-	//wykres4.print_plot("set yrange [-2:3]; ");
+	wykres4.print_plot("set yrange [-2:3]; set xtics 1; ");
 	path_wykres1 = wykres4.get_path();
-	std::cout << path_wykres1 << std::endl;
+	//std::cout << path_wykres1 << std::endl;
 
 #ifdef __DFT
 	quant_table = dft::load_file_real(path_wykres1);
