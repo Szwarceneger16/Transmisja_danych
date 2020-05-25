@@ -19,9 +19,12 @@ int main()
 
 	my_plot wykres0(path, file_name + " sygnal S2BS");
 	wykres0.function_plot(modulators::zegar, ARG1, dane, Ts, modulators::Tb);
-	wykres0.print_plot("set yrange [-0.5:1.5]; set xtics 1; ");
+	//wykres0.print_plot("set yrange [-0.5:1.5]; set xtics 1; ");
 	
 	auto zakodowany = Hamming74_SECDED::code(dane);
+	my_plot wykres6(path, file_name + " po kodowaniu Hamminga");
+	wykres6.function_plot(modulators::zegar, ARG1, zakodowany, Ts, modulators::Tb);
+	//wykres6.print_plot("set yrange [-1.5:1.5]; set xtics 1; ");
 
 	std::string zegar = "";
 	for (int i = 0; i < zakodowany.size()/2.0; i++)
@@ -31,9 +34,9 @@ int main()
 		//zegar.append("1");
 	}
 
-	my_plot wykres3(path, file_name + " sygnal BAMI");
-	auto name = wykres3.function_plot(modulators::BAMI, ARG1, zakodowany, Ts, modulators::Tb);
-	wykres3.print_plot("set yrange [-1.5:1.5]; set xtics 1; ");
+	my_plot wykres3(path, file_name + " sygnal NRZI");
+	auto name = wykres3.function_plot(modulators::NRZI, ARG1, zakodowany, Ts, modulators::Tb);
+	//wykres3.print_plot("set yrange [-1.5:1.5]; set xtics 1; ");
 	auto dem_tab = dft::load_file_real(name);
 	auto dem_TTL = demodualtor::BAMI(dem_tab);
 	//std::cout << zakodowany << std::endl << dem_TTL << std::endl;
@@ -43,6 +46,10 @@ int main()
 	//wykres1.print_plot("set yrange [-0.5:1.5]; set xtics 1; ");
 
 	auto zdekodowany = Hamming74_SECDED::decode(zakodowany);
+	
+	my_plot wykres7(path, file_name + " po dekodowaniu Hamminga NRZI");
+	wykres7.function_plot(modulators::zegar, ARG1, zakodowany, Ts, modulators::Tb);
+	wykres7.print_plot("set yrange [-1.5:1.5]; set xtics 1; ");
 
 	std::cout << tekst << std::endl << SB2S(zdekodowany) << std::endl;
 
