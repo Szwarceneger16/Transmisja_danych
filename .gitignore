@@ -5,6 +5,7 @@
 #MY FILES
 *.doc
 *.docx
+/dlapiotra
 
 
 ### C++ ###
